@@ -1,5 +1,3 @@
-setwd("/scratch/m/mickeyi/hauselin/AkinaPower/")
-
 library(data.table); library(paramtest); library(lme4); library(lmerTest); library(tidyverse); library(parallel)
 
 mlm_test <- function(simNum, N, b1, b2, b0 = 0, varInt = 1, varSlope_b1 = 1, varSlope_b2 = 1, varResid = 1) {
@@ -70,12 +68,12 @@ mlm_test <- function(simNum, N, b1, b2, b0 = 0, varInt = 1, varSlope_b1 = 1, var
   return(return)
 }
 
-power_mlm <- grid_search(mlm_test, 
+power_mlm <- grid_search(mlm_test,
 params <- list(N = c(60, 70, 80, 90), b1 = c(0.05, 0.08, 0.12), b2 = c(0.05, 0.08, 0.12),
-                                                 varInt = c(0.01, 0.05, 0.1), 
-                                                 varSlope_b1 = c(0.01, 0.05, 0.1), varSlope_b2 = c(0.01, 0.05, 0.1), 
+                                                 varInt = c(0.01, 0.05, 0.1),
+                                                 varSlope_b1 = c(0.01, 0.05, 0.1), varSlope_b2 = c(0.01, 0.05, 0.1),
                                                  varResid = c(0.01, 0.1, 0.2, 0.3)),
-                         n.iter = 1000, output = 'data.frame', 
+                         n.iter = 1000, output = 'data.frame',
                          parallel = "snow", ncpus = detectCores())
 
 print('iterations')
