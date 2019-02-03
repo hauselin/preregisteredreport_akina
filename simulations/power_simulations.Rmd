@@ -1,28 +1,68 @@
 ---
-title: "power_simulations"
+title: "Power simulations for sensitivity analyses (Umemoto et al. preregistered report)"
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r load libraries, results='show', warning=FALSE, message=FALSE, echo=TRUE, include=TRUE}
+library(data.table); library(hausekeep); library(tidyverse)
 ```
 
-## Including Plots
+## Simulations
 
-You can also embed plots, for example:
+We simulated 3888 different parameter combinations for our linear mixed model `y ~ b0 + b1x + b2x + error`. For each set of parameter combination, we simulated 1000 datasets and fitted the models using the `lmer()` function from the `lme4` package and obtained the significance values using the `lmerTest` package. Therefore, we ran 3888 * 1000 = 3888000 models in total. For each test, we determine whether the probability value was equal to or smaller than 0.02 (> 0.02 coded as 0, <= 0.02 coded as 1). These simulations were run using the package `paramtest`. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+Simulated random-intercept model: `lmer(y ~ x + y + (1 | subject)`
+
+Since the raw simulated data are nearly 1GB in size, we did not upload them here. We instead provide only the aggregated dataset whereby each row reflects the aggregated values/estimates from 1000 simulations using the same set of parameters. 
+
+Data key
+
+* `N.test`: simulated sample size (60, 70, 80, 90)
+* `b1.test`: simulated b1 coefficients (0.05, 0.08, 0.12)
+* `b2.test`: simulated b1 coefficients (0.05, 0.08, 0.12)
+* `varInt.test`: simulated variance in intercept b0 across participants (0.01, 0.05, 0.10)
+* `varSlope_b1.test`: simulated variance in b1 across participants (0.01, 0.05, 0.10)
+* `varSlope_b2.test`: simulated variance in b2 across participants (0.01, 0.05, 0.10)
+* `varResid.test`: simulated residual variance (0.01, 0.10, 0.20, 0.30)
+* `power_b1`: observed power (1000 simulations)
+* `power_b2`: observed power (1000 simulations)
+* `r_x1`: observed effect size correlation r (1000 simulations)
+* `r_x2`: observed effect size correlation r (1000 simulations)
+
+### Read data
+
+```{r read data}
+dt1 <- fread("power_simulations_avg.csv")
+print(dt1)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### Compute minimum observed power
+
+```{r}
+avg <- dt1[, .(min_r_x1 = min(r_x1),
+        min_r_x2 = min(r_x2),
+        pow_b1 = mean(power_b1),
+        pow_b2 = mean(power_b2)),
+    keyby = .(N.test, b1.test)]
+# convert correlation r to Cohen's f and print result
+avg[, f := es(r = min_r_x1, msg = F)$f, by = .(N.test, b1.test)] %>% print()
+```
+
+### Plot
+
+```{r}
+ggplot(avg, aes(f, pow_b1, col = as.factor(N.test))) +
+  geom_point() +
+  # geom_line() +
+  geom_hline(yintercept = 0.90, linetype = 'dashed') +
+  labs(x = "Mininum simulated effect size (Cohen's f)", y = "Statistical power (alpha = 0.02)", col = "Sample size")
+# ggsave("simulations.jpg", dpi = 200, width = 7, height = 5)
+```
+
+
