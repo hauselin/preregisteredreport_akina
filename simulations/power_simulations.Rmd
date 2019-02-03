@@ -56,13 +56,13 @@ avg[, f := es(r = min_r_x1, msg = F)$f, by = .(N.test, b1.test)] %>% print()
 
 ### Plot
 
-```{r}
+```{r power sensitivity plot}
 ggplot(avg, aes(f, pow_b1, col = as.factor(N.test))) +
   geom_point() +
   # geom_line() +
   geom_hline(yintercept = 0.90, linetype = 'dashed') +
   labs(x = "Mininum simulated effect size (Cohen's f)", y = "Statistical power (alpha = 0.02)", col = "Sample size")
-# ggsave("simulations.jpg", dpi = 200, width = 7, height = 5)
+ggsave("simulations.jpg", dpi = 200, width = 7, height = 5)
 ```
 
 

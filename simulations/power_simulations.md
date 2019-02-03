@@ -96,8 +96,8 @@ ggplot(avg, aes(f, pow_b1, col = as.factor(N.test))) +
   labs(x = "Mininum simulated effect size (Cohen's f)", y = "Statistical power (alpha = 0.02)", col = "Sample size")
 ```
 
-![](power_simulations_files/figure-markdown_github/unnamed-chunk-2-1.png)
+![](power_simulations_files/figure-markdown_github/power%20sensitivity%20plot-1.png)
 
 ``` r
-# ggsave("simulations.jpg", dpi = 200, width = 7, height = 5)
+ggsave("simulations.jpg", dpi = 200, width = 7, height = 5)
 ```
