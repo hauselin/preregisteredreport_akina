@@ -1,8 +1,8 @@
-library(tidyverse); library(data.table); library(broom); library(dtplyr); library(lme4); library(lmerTest); library(ggbeeswarm); library(cowplot)
 
 
-dt1 <- fread("/Users/Hause/Dropbox/Working Projects/Akina preregistered report/simulations")
-dt1
+setwd("/Users/Hause/Dropbox/Working Projects/Akina preregistered report/simulations")
+
+dt1 <- fread()
 
 
 dt2 <- dt1[, .(power_b1 = mean(sig_x1, na.rm = T), power_b2 = mean(sig_x2, na.rm = T), r_x1 = mean(r_x1), r_x2 = mean(r_x2)),
