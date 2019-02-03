@@ -19,7 +19,7 @@ We simulated 3888 different parameter combinations for our linear mixed model `y
 
 Simulated random-intercept model: `lmer(y ~ x + y + (1 | subject)`
 
-Since the raw simulated data are nearly 1GB in size, we did not upload them here. We instead provide only the aggregated dataset whereby each row reflects the aggregated values/estimates from 1000 simulations using the same set of parameters. 
+Since the raw simulated data are nearly 1GB in size, we did not upload them here. We instead provide only the aggregated dataset whereby each row reflects the aggregated values/estimates from 1000 simulations using the same set of parameters. For simulation script, see `simPower.R` script.
 
 Data key
 
@@ -45,11 +45,9 @@ print(dt1)
 ### Compute minimum observed power
 
 ```{r}
-avg <- dt1[, .(min_r_x1 = min(r_x1),
-        min_r_x2 = min(r_x2),
-        pow_b1 = mean(power_b1),
-        pow_b2 = mean(power_b2)),
-    keyby = .(N.test, b1.test)]
+avg <- dt1[, .(pow_b1 = mean(power_b1), pow_b2 = mean(power_b2), 
+               min_r_x1 = min(r_x1), min_r_x2 = min(r_x2)), 
+        keyby = .(N.test, b1.test)]
 # convert correlation r to Cohen's f and print result
 avg[, f := es(r = min_r_x1, msg = F)$f, by = .(N.test, b1.test)] %>% print()
 ```

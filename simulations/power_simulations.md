@@ -12,7 +12,7 @@ We simulated 3888 different parameter combinations for our linear mixed model `y
 
 Simulated random-intercept model: `lmer(y ~ x + y + (1 | subject)`
 
-Since the raw simulated data are nearly 1GB in size, we did not upload them here. We instead provide only the aggregated dataset whereby each row reflects the aggregated values/estimates from 1000 simulations using the same set of parameters.
+Since the raw simulated data are nearly 1GB in size, we did not upload them here. We instead provide only the aggregated dataset whereby each row reflects the aggregated values/estimates from 1000 simulations using the same set of parameters. For simulation script, see `simPower.R` script.
 
 Data key
 
@@ -63,28 +63,26 @@ print(dt1)
 ### Compute minimum observed power
 
 ``` r
-avg <- dt1[, .(min_r_x1 = min(r_x1),
-        min_r_x2 = min(r_x2),
-        pow_b1 = mean(power_b1),
-        pow_b2 = mean(power_b2)),
-    keyby = .(N.test, b1.test)]
+avg <- dt1[, .(pow_b1 = mean(power_b1), pow_b2 = mean(power_b2), 
+               min_r_x1 = min(r_x1), min_r_x2 = min(r_x2)), 
+        keyby = .(N.test, b1.test)]
 # convert correlation r to Cohen's f and print result
 avg[, f := es(r = min_r_x1, msg = F)$f, by = .(N.test, b1.test)] %>% print()
 ```
 
-    ##     N.test b1.test   min_r_x1   min_r_x2    pow_b1    pow_b2     f
-    ##  1:     60    0.05 0.07625368 0.09577780 0.7321574 0.9180247 0.076
-    ##  2:     60    0.08 0.11240932 0.09736109 0.9232623 0.9189414 0.113
-    ##  3:     60    0.12 0.16699638 0.09730276 0.9901296 0.9177685 0.169
-    ##  4:     70    0.05 0.07456797 0.09386761 0.7710679 0.9325154 0.075
-    ##  5:     70    0.08 0.11376271 0.09531727 0.9424630 0.9324660 0.115
-    ##  6:     70    0.12 0.16562002 0.09593202 0.9945093 0.9330648 0.168
-    ##  7:     80    0.05 0.07298579 0.09624433 0.8020216 0.9435247 0.073
-    ##  8:     80    0.08 0.11211197 0.09268520 0.9573333 0.9442901 0.113
-    ##  9:     80    0.12 0.16543589 0.09431878 0.9967037 0.9439321 0.168
-    ## 10:     90    0.05 0.07338928 0.09356151 0.8273642 0.9526883 0.074
-    ## 11:     90    0.08 0.11188563 0.09409394 0.9667901 0.9523179 0.113
-    ## 12:     90    0.12 0.16786409 0.09164078 0.9981111 0.9523364 0.170
+    ##     N.test b1.test    pow_b1    pow_b2   min_r_x1   min_r_x2     f
+    ##  1:     60    0.05 0.7321574 0.9180247 0.07625368 0.09577780 0.076
+    ##  2:     60    0.08 0.9232623 0.9189414 0.11240932 0.09736109 0.113
+    ##  3:     60    0.12 0.9901296 0.9177685 0.16699638 0.09730276 0.169
+    ##  4:     70    0.05 0.7710679 0.9325154 0.07456797 0.09386761 0.075
+    ##  5:     70    0.08 0.9424630 0.9324660 0.11376271 0.09531727 0.115
+    ##  6:     70    0.12 0.9945093 0.9330648 0.16562002 0.09593202 0.168
+    ##  7:     80    0.05 0.8020216 0.9435247 0.07298579 0.09624433 0.073
+    ##  8:     80    0.08 0.9573333 0.9442901 0.11211197 0.09268520 0.113
+    ##  9:     80    0.12 0.9967037 0.9439321 0.16543589 0.09431878 0.168
+    ## 10:     90    0.05 0.8273642 0.9526883 0.07338928 0.09356151 0.074
+    ## 11:     90    0.08 0.9667901 0.9523179 0.11188563 0.09409394 0.113
+    ## 12:     90    0.12 0.9981111 0.9523364 0.16786409 0.09164078 0.170
 
 ### Plot
 
