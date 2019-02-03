@@ -30,10 +30,10 @@ Data key
 * `varSlope_b1.test`: simulated variance in b1 across participants (0.01, 0.05, 0.10)
 * `varSlope_b2.test`: simulated variance in b2 across participants (0.01, 0.05, 0.10)
 * `varResid.test`: simulated residual variance (0.01, 0.10, 0.20, 0.30)
-* `power_b1`: observed power (1000 simulations)
-* `power_b2`: observed power (1000 simulations)
-* `r_x1`: observed effect size correlation r (1000 simulations)
-* `r_x2`: observed effect size correlation r (1000 simulations)
+* `power_b1`: observed power (1000 simulations) (alpha = 0.02)
+* `power_b2`: observed power (1000 simulations) (alpha = 0.02)
+* `r_x1`: mean observed effect size correlation r (1000 simulations)
+* `r_x2`: mean observed effect size correlation r (1000 simulations)
 
 ### Read data
 
